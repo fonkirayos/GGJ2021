@@ -51,7 +51,7 @@ public class CJumpingState : CState<CPlayerController>
             Controller.jump();
             Controller.m_jumpsLeft--;
         }
-        if (Input.GetButtonDown("Vertical"))
+        if (Input.GetButton("Vertical"))
         {
             if (Controller.bclimbLadder)
             {

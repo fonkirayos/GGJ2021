@@ -11,6 +11,7 @@ public class CLadderState : CState<CPlayerController>
         Debug.Log("climbing ladder");
         Controller.m_rigidbody.gravityScale = 0f;
         Controller.climb();
+        //Controller.m_rigidbody.velocity = new Vector2(0, 0);
     }
 
     public override void onExit(CPlayerController Controller)
@@ -45,22 +46,34 @@ public class CLadderState : CState<CPlayerController>
 
     protected override void inputManage(CPlayerController Controller)
     {
-        if (Input.GetButton("Horizontal") | Input.GetButton("Vertical"))
+        if (Input.GetButton("Horizontal") )
+        {
+            if (Controller.bclimbLadder)
+            {
+                Controller.climb();
+                Controller.bmoving = true;
+            }            
+        }
+        if (Input.GetButton("Vertical"))
         {
             if (Controller.bclimbLadder)
             {
                 Controller.climb();
                 Controller.bkeyPressed = true;
-            }            
+            }
         }
         if (Input.GetButtonDown("Jump"))
         {
             Controller.bkeyPressed = true;
             m_fsm.setCurrentState(Controller.m_jumpingState, Controller);
         }
-        if(Controller.bkeyPressed == false)
+        if(Controller.bmoving == false)
         {
-            Controller.m_rigidbody.velocity = new Vector2(0, 0);
+            Controller.m_rigidbody.velocity = new Vector2(0, Controller.m_rigidbody.velocity.y);
+        }
+        if (Controller.bkeyPressed == false)
+        {
+            Controller.m_rigidbody.velocity = new Vector2(Controller.m_rigidbody.velocity.x, 0);
         }
     }
 }

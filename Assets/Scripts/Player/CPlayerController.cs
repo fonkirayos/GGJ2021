@@ -58,6 +58,7 @@ public class CPlayerController : MonoBehaviour
     {
         m_fsm.update(this);
         bkeyPressed = false;
+        bmoving = false;
     }
 
     public void move()
