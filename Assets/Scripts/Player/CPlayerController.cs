@@ -26,7 +26,13 @@ public class CPlayerController : MonoBehaviour
     public bool bclimbLadder = false;
     public bool m_facingRight = true;
     public bool bholdingbomb = false;
+    public bool binvincible = false;
 
+    public int m_lives = 5;
+    public int m_fossil = 0;
+    int maxfossil = 4;
+    public float m_lastInvencibility = 0;
+    [SerializeField] float m_invincibleTime = 2f;
     [SerializeField] float m_speed = 5f;
     [SerializeField] float m_jumpForce = 400f;
     [SerializeField] float m_climbSpeed = 2.5f;
@@ -62,11 +68,40 @@ public class CPlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (m_lives <= 0)
+        {
+            Application.Quit();
+            //Debug.Log("deadxd");
+        }
+
+        if(m_fossil >= maxfossil)
+        {
+            Application.Quit();
+            //Debug.Log("gratsxd");
+        }
+
         m_fsm.update(this);
         bkeyPressed = false;
         bmoving = false;
 
-        if(m_bombheld != null & !m_bombheld.GetComponent<CBomb>().bexplode)
+        if (binvincible)
+        {
+            if (m_lastInvencibility < m_invincibleTime)
+            {
+                m_lastInvencibility += Time.deltaTime;
+                float newAlpha = Mathf.Lerp(0, 1, m_lastInvencibility / 2);
+                m_sprite.color = new Color(m_sprite.color.r, m_sprite.color.g, m_sprite.color.b, newAlpha);
+                //Debug.Log("deberiamos estar sumando");
+            }
+            else
+            {
+                m_lastInvencibility = 0;
+                binvincible = false;
+            }
+        }
+
+        if (m_bombheld != null & !m_bombheld.GetComponent<CBomb>().bexplode)
         {
             if (bholdingbomb)
             {
@@ -79,6 +114,8 @@ public class CPlayerController : MonoBehaviour
         {
             bholdingbomb = false;
         }
+
+        
     }
 
     public void move()
@@ -131,6 +168,11 @@ public class CPlayerController : MonoBehaviour
             bclimbLadder = true;
             
         }
+        else if (collision.gameObject.tag == "trap" & !binvincible)
+        {
+            binvincible = true;
+            m_lives--;
+        }
         else
         {
             if(m_lastLadder != null)
@@ -151,6 +193,11 @@ public class CPlayerController : MonoBehaviour
            
 
         }
+        else if (collision.gameObject.tag == "trap" & !binvincible)
+        {
+            binvincible = true;
+            m_lives--;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -158,6 +205,11 @@ public class CPlayerController : MonoBehaviour
         if(collision.gameObject.tag == "ladder")
         {
             bclimbLadder = true;
+        }
+        else if(collision.gameObject.tag == "fossil")
+        {
+            m_fossil++;
+            Destroy(collision.gameObject);
         }
         btriggering = true;
     }
@@ -168,6 +220,11 @@ public class CPlayerController : MonoBehaviour
         {
             bclimbLadder = true;
         }
+        //else if (collision.gameObject.tag == "fossil")
+        //{
+        //    m_fossil++;
+        //    Destroy(collision.gameObject);
+        //}
         btriggering = true;
     }
 
@@ -233,8 +290,23 @@ public class CPlayerController : MonoBehaviour
         m_bombheld = null;
     }
 
+    public void receiveDamage()
+    {
+        
+    }
+
     public void recoverJumps()
     {
         m_jumpsLeft = m_maxJumps;
+    }
+
+
+    public void randomize()
+    {
+        m_lives++;
+        m_speed = Random.Range(3f, 8f);
+        m_maxJumps = Random.Range(2, 6);
+        m_jumpsLeft = m_maxJumps;
+        m_rigidbody.gravityScale = Random.Range(1.7f, 3f);
     }
 }

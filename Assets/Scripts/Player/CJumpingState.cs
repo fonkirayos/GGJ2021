@@ -69,6 +69,13 @@ public class CJumpingState : CState<CPlayerController>
                 Controller.dropBomb();
             }
         }
+        if (Input.GetButtonDown("TBomb"))
+        {
+            if (Controller.bholdingbomb)
+            {
+                Controller.throwBomb();
+            }
+        }
         if (!Controller.bkeyPressed)
         {
             Controller.m_rigidbody.velocity = new Vector2(0, Controller.m_rigidbody.velocity.y);

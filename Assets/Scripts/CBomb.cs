@@ -47,7 +47,12 @@ public class CBomb : MonoBehaviour
             }
             else if(col.gameObject.tag == "Player")
             {
-                Debug.Log("jeje explotamos alv");
+                // Debug.Log("jeje explotamos alv");
+                if (!col.gameObject.GetComponent<CPlayerController>().binvincible)
+                {
+                    col.gameObject.GetComponent<CPlayerController>().m_lives--;
+                    col.gameObject.GetComponent<CPlayerController>().binvincible = true;
+                }
                 col.gameObject.GetComponent<CPlayerController>().recoverJumps();
             }
         }
