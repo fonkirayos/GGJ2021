@@ -38,12 +38,28 @@ public class CIdleState : CState <CPlayerController>
         {
             if(Controller.bclimbLadder)
             {
-                Debug.Log("escalando");
                 m_fsm.setCurrentState(Controller.m_ladderState, Controller);
-
             }
            
             
+        }
+        if (Input.GetButtonDown("Bomb"))
+        {
+            if (!Controller.bholdingbomb)
+            {
+                Controller.holdBomb();
+            }
+            else
+            {
+                Controller.dropBomb();
+            }
+        }
+        if (Input.GetButtonDown("TBomb"))
+        {
+            if (Controller.bholdingbomb)
+            {
+                Controller.throwBomb();
+            }
         }
         Controller.m_rigidbody.velocity = new Vector2(0, Controller.m_rigidbody.velocity.y);
     }

@@ -9,11 +9,11 @@ public class CBomb : MonoBehaviour
     float radius = 1f;
     float timeElapsed = 0f;
     float lifespan = 3f;
-    bool bexplode = false;
+    public bool bexplode = false;
     // Start is called before the first frame update
     void Start()
     {
-        Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), GameObject.Find("Player").GetComponent<CircleCollider2D>());
+        Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), GameObject.Find("Player").GetComponent<CapsuleCollider2D>());
     }
 
     // Update is called once per frame
@@ -45,8 +45,14 @@ public class CBomb : MonoBehaviour
             {
                 Destroy(col.gameObject);
             }
+            else if(col.gameObject.tag == "Player")
+            {
+                Debug.Log("jeje explotamos alv");
+                col.gameObject.GetComponent<CPlayerController>().recoverJumps();
+            }
         }
         GetComponent<Rigidbody2D>().gravityScale = 0;
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         GetComponent<CircleCollider2D>().isTrigger = true;
     }
 

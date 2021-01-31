@@ -41,6 +41,17 @@ public class CMovingState : CState<CPlayerController>
                 m_fsm.setCurrentState(Controller.m_ladderState, Controller);
             }
         }
+        if (Input.GetButtonDown("Bomb"))
+        {
+            if (!Controller.bholdingbomb)
+            {
+                Controller.holdBomb();
+            }
+            else
+            {
+                Controller.dropBomb();
+            }
+        }
         if (Controller.bkeyPressed == false)
         {
             Controller.m_rigidbody.velocity = new Vector2(0, Controller.m_rigidbody.velocity.y);

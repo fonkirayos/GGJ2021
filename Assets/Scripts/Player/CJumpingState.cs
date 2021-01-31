@@ -17,7 +17,7 @@ public class CJumpingState : CState<CPlayerController>
     public override void onExit(CPlayerController Controller)
     {
         Debug.Log("landed");
-        Controller.m_jumpsLeft = Controller.m_maxJumps;
+        Controller.recoverJumps();
     }
      
     public override void update(CPlayerController Controller)
@@ -58,7 +58,18 @@ public class CJumpingState : CState<CPlayerController>
                 m_fsm.setCurrentState(Controller.m_ladderState, Controller);
             }
         }
-        if(!Controller.bkeyPressed)
+        if (Input.GetButtonDown("Bomb"))
+        {
+            if (!Controller.bholdingbomb)
+            {
+                Controller.holdBomb();
+            }
+            else
+            {
+                Controller.dropBomb();
+            }
+        }
+        if (!Controller.bkeyPressed)
         {
             Controller.m_rigidbody.velocity = new Vector2(0, Controller.m_rigidbody.velocity.y);
         }
