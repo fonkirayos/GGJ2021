@@ -6,6 +6,7 @@ using UnityEngine;
 public class CPlayerController : MonoBehaviour
 {
     GameObject m_player = null;
+    SpriteRenderer m_sprite = null;
     //Rigidbody2D m_rigidbody = null;
     public Rigidbody2D m_rigidbody;
     public GameObject m_lastLadder = null;
@@ -20,7 +21,7 @@ public class CPlayerController : MonoBehaviour
     public bool bmoving = false;
     public bool btriggering = false;
     public bool bclimbLadder = false;
-   
+    public bool m_facingRight = true;
 
 
     [SerializeField] float m_speed = 5f;
@@ -39,6 +40,7 @@ public class CPlayerController : MonoBehaviour
     void Start()
     {
         m_player = GameObject.Find("Player");
+        m_sprite = GetComponent<SpriteRenderer>();
         //m_rigidbody = m_player.GetComponent<Rigidbody2D>();
         m_fsm = new CStateMachine<CPlayerController>();
         m_idleState = new CIdleState(m_fsm);
@@ -66,11 +68,14 @@ public class CPlayerController : MonoBehaviour
   
         if (Input.GetAxisRaw("Horizontal") == 1)
         {
-                m_rigidbody.velocity = new Vector2(m_speed, m_rigidbody.velocity.y);
+            m_sprite.flipX = false;
+               
+            m_rigidbody.velocity = new Vector2(m_speed, m_rigidbody.velocity.y);
         }
-        else
+        else if (Input.GetAxisRaw("Horizontal") == -1)
         {
-                m_rigidbody.velocity = new Vector2(-m_speed, m_rigidbody.velocity.y);
+            m_sprite.flipX = true;
+            m_rigidbody.velocity = new Vector2(-m_speed, m_rigidbody.velocity.y);
         }
       
     }
